@@ -22,7 +22,7 @@
 			<key>filename</key>
 			<string>pdb2cDFT.pl</string>
 			<key>lastUsed</key>
-			<date>2014-07-30T21:39:40Z</date>
+			<date>2014-07-30T21:49:56Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -36,9 +36,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>11</integer>
-				<key>line</key>
 				<integer>0</integer>
+				<key>line</key>
+				<integer>3</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
