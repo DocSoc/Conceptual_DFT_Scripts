@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>currentDocument</key>
+	<string>pdb2cDFT.pl</string>
+	<key>documents</key>
+	<array>
+		<dict>
+			<key>filename</key>
+			<string>3-Fluoro-4-Aminopyridine.com</string>
+			<key>lastUsed</key>
+			<date>2014-07-30T21:39:40Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>3-Fluoro-4-Aminopyridine.pdb</string>
+			<key>lastUsed</key>
+			<date>2014-07-30T21:25:53Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>pdb2cDFT.pl</string>
+			<key>lastUsed</key>
+			<date>2014-07-30T21:39:40Z</date>
+			<key>selected</key>
+			<true/>
+		</dict>
+	</array>
+	<key>fileHierarchyDrawerWidth</key>
+	<integer>200</integer>
+	<key>metaData</key>
+	<dict>
+		<key>pdb2cDFT.pl</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>11</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>pdb2cDFT.pl</string>
+	</array>
+	<key>showFileHierarchyDrawer</key>
+	<true/>
+	<key>windowFrame</key>
+	<string>{{609, 4}, {1307, 1054}}</string>
+</dict>
+</plist>
