@@ -1,5 +1,7 @@
 #! /usr/bin/perl
 
+# 
+
 # Reads in PDB files and creates linked G09 files for conceptual DFT based calculations.
 
 # VARIABLES:
