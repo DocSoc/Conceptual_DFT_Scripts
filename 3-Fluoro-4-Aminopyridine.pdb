@@ -1,4 +1,4 @@
-HEADER
+HEADER 
 REMARK Spartan `04 exported M001
 HETATM    1  C   UNK  0001      -0.709   0.087  -0.062
 HETATM    2  N   UNK  0001       2.125  -0.114   0.037
