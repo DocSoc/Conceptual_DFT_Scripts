@@ -199,7 +199,6 @@ foreach $File (@FileList) {
 					}
 			}
 
-
 			# Find and extract the Natural charges.
 			{
 				# Find the start of the Natural charge section.
