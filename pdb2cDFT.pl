@@ -14,8 +14,8 @@
 		my	@FileList;			# Holds the list of pdb files to be processed.
 		my	@Temp;				# An array that holds the contents of the PDB file current line.
 	# Charge/Population flags and methods:
-		@Population = (0,0,0,0,0);	# An array which holds which population methods are to be used (switches).
-		@PopulationMethod = ("npa", "chelp", "chelpg", "mk", "hirshfeld");	# An array which holds the names of the population methods available.
+		@Population = (0,0,0);	# An array which holds which population methods are to be used (switches).
+		@PopulationMethod = ("npa", "mk", "hirshfeld");	# An array which holds the names of the population methods available.
 		$PopString = "pop=(";	# Opening section of the population command.
 
 #	MAIN CODE STARTS HERE:
@@ -30,13 +30,13 @@
 			$cnt++; # Increment positional counter.
 		}
 		$PopString = (substr $PopString, 0, length($PopString) - 1) . ")";	# Trims off the last unwanted comma and closes the bracket.
-	# If no population methods have been selected, then use an empty string.
-		if ($PopString eq "pop=)") {$PopString = ""};
+	# If no population methods have been selected, then default to NPA and Hirshfeld charges.
+		if ($PopString eq "pop=)") {$PopString = "pop=(npa,hirshfeld)"};
 
-	print "Processing files...";	# Tell the user that the files are being processed.
+	print "Processing files...\n";	# Tell the user that the files are being processed.
 	# BEGIN of FileList Loop.
 	foreach my $PDBFile (@FileList) {
-		print "\n\t$PDBFile ... Creating G09 file";	# Tell the user which file is being processed.
+		print "\t$PDBFile ... Creating G09 file.\n";	# Tell the user which file is being processed.
 		# Create the new G09 file.
 			$G09File = $PDBFile;	# The new filename is based upon the PDB filename.
 			$G09File =~ s/.pdb$//i;	# Crude strip off the extension. (Need to anchor this to the end.)
@@ -173,12 +173,10 @@ sub Parser {
 				Usage() if ($Argument =~ /^--help$/i);
 			# Test for which population method is to be run.
 				$Population[0] = 1 if ($Argument =~ /^-npa$/i);
-				$Population[1] = 1 if ($Argument =~ /^-chelp$/i);
-				$Population[2] = 1 if ($Argument =~ /^-chelpg$/i);
-				$Population[3] = 1 if ($Argument =~ /^-mk$/i);
-				$Population[4] = 1 if ($Argument =~ /^-hirshfeld$/i);
-				@Population = (1,1,1,1,1) if ($Argument =~ /^-all$/i);
-				@Population = (1,0,0,0,1) if ($Argument =~ /^-recommended$/i);
+				$Population[1] = 1 if ($Argument =~ /^-mk$/i);
+				$Population[2] = 1 if ($Argument =~ /^-hirshfeld$/i);
+				@Population = (1,1,1) if ($Argument =~ /^-all$/i);
+				@Population = (1,0,1) if ($Argument =~ /^-recommended$/i);
 			# Test for input file (must be .pdb file).
 				push (@FileList, $Argument) if ($Argument =~ /\.pdb$/i);
 		}
