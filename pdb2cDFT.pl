@@ -1,15 +1,29 @@
 #! /usr/bin/perl
 
-# 
-
-# Reads in PDB files and creates linked G09 files for conceptual DFT based calculations.
+#                        ( ~!~ ~!~ )
+#  .-----------------oOOo----(_)----oOOo----------------------------.
+#  |                                                                |
+#  |                      A Perl Script for:                        |
+#  |                                                                |
+#  | ..--** Converting pdb files into G09 input files        **--.. |
+#  | ..--** for the calculation of Conceptual DFT parameters **--.. |
+#  |                                                                |
+#  | ..--** Sister script of cDFTExtract.pl                  **--.. |
+#  |                                                                |
+#  | Version 0.1 - First Version                                    |
+#  | Author David Hose                                              |
+#  | (c) July 2014                                                  |
+#  |                      .oooO                                     |
+#  |                      (   )   Oooo.                             |
+#  .-----------------------\ (----(   )-----------------------------.
+#                           \_)    ) /
+#                                 (_/
 
 # VARIABLES:
 	# User varialbles:
 		my	$Memory = "200MW";	# Memory allocation.
 		my	$Processors = 4;	# Maximum number of processor to be used in parallel excution.
 		my	$G09Ext = "com";	# The extension to be used for the G09 files.
-
 	# General Variables:
 		my	@FileList;			# Holds the list of pdb files to be processed.
 		my	@Temp;				# An array that holds the contents of the PDB file current line.
@@ -91,23 +105,23 @@
 
 # SUBROUTINES.
 sub Hello {
-	print <<ENDHELLO;
+print <<ENDHELLO;
 			                      ( ~!~ ~!~ )
-			.-----------------oOOo----(_)----oOOo-------------------------.
-			|                                                             |
-			|                   A Perl Script for:                        |
-			|                                                             |
-			| ..--**      **--.. |
-			| ..--**        **--.. |
-			| ..--**   **--.. |
-			| ..--**                                        **--.. |
-			|                                                             |
-			| Version 0.1 - First Version                                 |
-			| Author David Hose                                           |
-			| (c) July 2014                                               |
-			|                      .oooO                                  |
-			|                      (   )   Oooo.                          |
-			.-----------------------\\ (----(   )-------------------------.
+			.-----------------oOOo----(_)----oOOo----------------------------.
+			|                                                                |
+			|                      A Perl Script for:                        |
+			|                                                                |
+			| ..--** Converting pdb files into G09 input files        **--.. |
+			| ..--** for the calculation of Conceptual DFT parameters **--.. |
+			|                                                                |
+			| ..--** Sister script of cDFTExtract.pl                  **--.. |
+			|                                                                |
+			| Version 0.1 - First Version                                    |
+			| Author David Hose                                              |
+			| (c) July 2014                                                  |
+			|                      .oooO                                     |
+			|                      (   )   Oooo.                             |
+			.-----------------------\\ (----(   )----------------------------.
 			                         \\_)    ) /
 			                               (_/
 
@@ -128,24 +142,20 @@ print <<ENDUSAGE;
 
 			             ..--** NMR_pdb2G09 **--..
 
-			This script reads pdb files and sets up a NMR calculation which consists of:
-				* Geometry optimisation and frequency calculation.
-				* GIAO NMR calculation.
-				* Future versions will include Internuclear Coupling Constants.
+			This script reads pdb files and sets up a Conceptual DFT calculation which consists of:
+				* Geometry optimisation of the Neutral (Parent) species.
+				* Single point energy of the Radical Anion.
+				* Single point energy of the Radical Cation.
 
-			The route cards for the subprocesses are defined as a set of variables at the beginning of script.
-			The script also creates corresponding submission script for the cluster (but does not submit it).
-
-			NMR_pdb2G09.pl [--help] [-r1/2/3/4] File01.pdb File02.pdb
+			NMR_pdb2G09.pl [--help] [-npa] [-mk] [-hirshfeld] [-all] File01.pdb File02.pdb
 
 			Optional Switches:
 
-				--help : This help page.
-				-r1    : Method 1 - GIAO/B3LYP/6-31G(d)//B3LYP/6-31G(d) - Moderate Accuracy / Low Cost {Default}
-				-r2    : Method 2 - GIAO/B3LYP/6-31+G(d,p)//B3LYP/6-31G(d) - Good Accuracy / Low Cost
-				-r3    : Method 3 - GIAO/mPW1PW91/6-311+G(2d,p)//B3LYP/6-31+G(d,p) - High Accuracy / Medium Cost
-				-r4    : Method 4 - GIAO/mPW1PW91/6-311+G(2d,p)//B3LYP/6-311+G(2d,p) - High Accuracy / High Cost
-				-hc    : Hydrogen Coupling Constants {To be implimented}
+				--help     : This help page.
+				-npa       : Requests Natural Population Analysis.
+				-mk        : Requests Merz-Singh-Kollman Population Analysis.
+				-hirshfeld : Requests Hirshfeld Population Analysis.
+				-all       : Requests Natural, Merz-Singh-Kollman and Hirshfeld Population Analysis.
 
 				Multiple .pdb files can be GLOB'd in by using *.pdb.
 
