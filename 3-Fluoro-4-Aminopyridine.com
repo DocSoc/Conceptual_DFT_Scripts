@@ -1,8 +1,8 @@
 %mem=200MW
 %nproc=4
 %chk=3-Fluoro-4-Aminopyridine
-#p opt b3lyp/6-31+G(d) nosymm pop=(npa,chelp,chelpg,mk,hirshfeld)
- 
+#p opt b3lyp/6-31+G(d) nosymm pop=(npa,hirshfeld)
+
 3-Fluoro-4-Aminopyridine: Parent Compound Optimisation [B3LYP/6-31+G(d)]
 
 0 1
@@ -24,7 +24,7 @@ F	-0.780	-2.276	-0.042
 %mem=200MW
 %nproc=4
 %chk=3-Fluoro-4-Aminopyridine
-#p rob3lyp/6-31+G(d) scf=tight nosymm guess=read geom=checkpoint pop=(npa,chelp,chelpg,mk,hirshfeld)
+#p rob3lyp/6-31+G(d) scf=tight nosymm guess=read geom=checkpoint pop=(npa,hirshfeld)
 
 3-Fluoro-4-Aminopyridine: Radical Anion Single Point.
 
@@ -34,7 +34,7 @@ F	-0.780	-2.276	-0.042
 %mem=200MW
 %nproc=4
 %chk=3-Fluoro-4-Aminopyridine
-#p rob3lyp/6-31+G(d) scf=tight nosymm guess=read geom=checkpoint pop=(npa,chelp,chelpg,mk,hirshfeld)
+#p rob3lyp/6-31+G(d) scf=tight nosymm guess=read geom=checkpoint pop=(npa,hirshfeld)
 
 3-Fluoro-4-Aminopyridine: Radical Cation Single Point.
 
