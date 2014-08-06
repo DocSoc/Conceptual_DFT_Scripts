@@ -130,7 +130,7 @@ foreach my $File (@FileList) {
 		# Find and extract the Hirshfeld charges.
 		{
 			# Find the start of the Hirshfeld charges section.
-				if ($Line =~ /^\sHirshfeld populations/ && $Stationary == 1) {
+				if ($Line =~ /^\sHirshfeld spin densities/ && $Stationary == 1) {
 					$HirshfeldFlag = 1; # In the Hirshfeld charges section of the output.
 					$HirshfeldCharges = 1; # Flag that Hirshfeld charges are available for futher calculations.
 					next LINE;
@@ -139,22 +139,19 @@ foreach my $File (@FileList) {
 				if ($HirshfeldFlag == 1 && $Line =~ /^\s+\d+\s+\p{IsL}+(\s+|\s+-)\d+.\d+/) {
 						my @Temp = split(/\s+/, $Line);
 						if($Temp[2] =~ /$Elements/) {
-							# Determine the correct Hirschfeld charge from CA and CB (count alpha and beta electrons) columns.
-								$Electrons = $Temp[4] + $Temp[5]; # Total electrons associated with atom.
-								$Charge = AtomicNumber($Temp[2]) - $Electrons; # Determine the Charge.
 							# Push data to the correct subarray according to which section of the calculation results the script is processing.
 								if($NormTerm == 0) {
 									push @HirshfeldAtomNum, $Temp[1];	# This holds the structural atom number.
 									push @HirshfeldElement, $Temp[2];	# This holds the atom element.
-									push @HirshfeldNeutral, $Charge;	# This holds the Neutral species charge.
+									push @HirshfeldNeutral, $Temp[4];	# This holds the Neutral species charge.
 								}
-								if($NormTerm == 1) {push @HirshfeldAnion, $Charge;}		# This holds the Anionic species charge.
-								if($NormTerm == 2) {push @HirshfeldCation, $Charge;}	# This holds the Cationic species charge.
+								if($NormTerm == 1) {push @HirshfeldAnion, $Temp[4];}		# This holds the Anionic species charge.
+								if($NormTerm == 2) {push @HirshfeldCation, $Temp[4];}	# This holds the Cationic species charge.
 						}
 					next LINE;
 				}
 			# At the end of the Hirshfeld charge section, reset the flag.
-				if ($HirshfeldFlag == 1 && $Line =~ /^\sHirshfeld spin densities/) {
+				if ($HirshfeldFlag == 1 && $Line =~ /^\sDip from Atomic Chgs/) {
 					$HirshfeldFlag = 0;
 					next LINE;
 				}
@@ -245,13 +242,15 @@ foreach my $File (@FileList) {
 			# Calculate Ionisation Potential (IP), Electron Affinity (EA), Softness and Electrophilicity Indices, then print.
 				$IP = $Energies[2] - $Energies[0];
 				$EA = $Energies[1] - $Energies[0];
-				$Softness = (($IP - $EA) / 2)**-1;
-				$Electrophilicity = (($Energies[2] - $Energies[0])+($Energies[0] - $Energies[1])) / (4 * ($Energies[2] + $Energies[1] - 2*$Energies[0]));
+				$Hardness = ($IP - $EA) / 2;
+				$Softness = (($IP - $EA))**-1;
+				$ChemPot = - ($IP + $EA) / 2;
+				$Electrophilicity = $ChemPot**2 / (2 * $Hardness);
 				print OUTPUT (sprintf("%.4f\t%.4f\t%.4f\t%.4f\n\n", $IP, $EA, $Softness, $Electrophilicity));
 		# If Natural Charge avaiable then print Fukui Table.
 			if($NaturalCharges == 1) {
 				print OUTPUT "Natural Charges Based Fukui and Related Parameters\n\n";
-				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf·\tS+\tS-\tS·\tw+\tw-\tw·\n"; # Table header.
+				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf°\tS+\tS-\tS°\tw+\tw-\tw°\n"; # Table header.
 				# Remove first, blank, element from the ESP arrays.
 					shift @NaturalAtomNum;
 					shift @NaturalElement;
@@ -266,9 +265,9 @@ foreach my $File (@FileList) {
 							print OUTPUT "$NaturalAtomNum[$Index]\t$NaturalElement[$Index]\t";
 							print OUTPUT (sprintf("%.5f\t%.5f\t%.5f\t", $NaturalNeutral[$Index], $NaturalAnion[$Index], $NaturalCation[$Index]));
 						# Fukui Functions.
-							my $FukuiPlus = $NaturalAnion[$Index] - $NaturalNeutral[$Index];
-							my $FukuiMinus = $NaturalNeutral[$Index] - $NaturalCation[$Index];
-							my $FukuiRad = $NaturalAnion[$Index] - $NaturalCation[$Index];
+							my $FukuiPlus = $NaturalNeutral[$Index] - $NaturalAnion[$Index];
+							my $FukuiMinus = $NaturalCation[$Index] - $NaturalNeutral[$Index];
+							my $FukuiRad = $NaturalCation[$Index] - $NaturalAnion[$Index];
 							print OUTPUT (sprintf("%.5f\t%.5f\t%.5f\t", $FukuiPlus, $FukuiMinus, $FukuiRad));
 						# Softness Functions.
 							my $SoftnessPlus = $FukuiPlus * $Softness;
@@ -286,7 +285,7 @@ foreach my $File (@FileList) {
 		# If Hirschfeld Charge avaiable then print Fukui Table.
 			if($HirshfeldCharges == 1) {
 				print OUTPUT "Hirshfeld Based Fukui and Related Parameters\n\n";
-				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf·\tS+\tS-\tS·\tw+\tw-\tw·\n"; # Table header.
+				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf°\tS+\tS-\tS°\tw+\tw-\tw°\n"; # Table header.
 				# Remove first, blank, element from the Mulliken arrays.
 					shift @HirshfeldAtomNum;
 					shift @HirshfeldElement;
@@ -299,11 +298,11 @@ foreach my $File (@FileList) {
 					for (my $Index = 0; $Index < $Length; $Index++) {
 						# Labels and Charges.
 							print OUTPUT "$HirshfeldAtomNum[$Index]\t$HirshfeldElement[$Index]\t";
-							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $HirshfeldNeutral[$Index], $HirshfeldAnion[$Index], $HirstfeldCation[$Index]));
+							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $HirshfeldNeutral[$Index], $HirshfeldAnion[$Index], $HirshfeldCation[$Index]));
 						# Fukui Functions.
-							my $FukuiPlus = $HirshfeldAnion[$Index] - $HirshfeldNeutral[$Index];
-							my $FukuiMinus = $HirshfeldNeutral[$Index] - $HirshfeldCation[$Index];
-							my $FukuiRad = $HirshfeldAnion[$Index] - $HirshfeldCation[$Index];
+							my $FukuiPlus = $HirshfeldNeutral[$Index] - $HirshfeldAnion[$Index];
+							my $FukuiMinus = $HirshfeldCation[$Index] - $HirshfeldNeutral[$Index];
+							my $FukuiRad = $HirshfeldCation[$Index] - $HirshfeldAnion[$Index];
 							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $FukuiPlus, $FukuiMinus, $FukuiRad));
 						# Softness Functions.
 							my $SoftnessPlus = $FukuiPlus * $Softness;
@@ -321,7 +320,7 @@ foreach my $File (@FileList) {
 		# If ESP Charge avaiable then print Fukui Table.
 			if($ESPCharges == 1) {
 				print OUTPUT "Electrostatic Potential () Based Fukui and Related Parameters\n\n";
-				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf·\tS+\tS-\tS·\tw+\tw-\tw·\n"; # Table header.
+				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf°\tS+\tS-\tS°\tw+\tw-\tw°\n"; # Table header.
 				# Remove first, blank, element from the ESP arrays.
 					shift @ESPAtomNum;
 					shift @ESPElement;
@@ -336,9 +335,9 @@ foreach my $File (@FileList) {
 							print OUTPUT "$ESPAtomNum[$Index]\t$ESPElement[$Index]\t";
 							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $ESPNeutral[$Index], $ESPAnion[$Index], $ESPCation[$Index]));
 						# Fukui Functions.
-							my $FukuiPlus = $ESPAnion[$Index] - $ESPNeutral[$Index];
-							my $FukuiMinus = $ESPNeutral[$Index] - $ESPCation[$Index];
-							my $FukuiRad = $ESPAnion[$Index] - $ESPCation[$Index];
+							my $FukuiPlus = $ESPNeutral[$Index] - $ESPAnion[$Index];
+							my $FukuiMinus = $ESPCation[$Index] - $ESPNeutral[$Index];
+							my $FukuiRad = $ESPCation[$Index] - $ESPAnion[$Index];
 							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $FukuiPlus, $FukuiMinus, $FukuiRad));
 						# Softness Functions.
 							my $SoftnessPlus = $FukuiPlus * $Softness;
@@ -356,7 +355,7 @@ foreach my $File (@FileList) {
 		# If Mulliken Charges available and required then print Fukui Table.
 			if($MullikenCharges == 1 && $MullikenOff != 1) {
 				print OUTPUT "Mulliken Based Fukui and Related Parameters\n\n";
-				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf·\tS+\tS-\tS·\tw+\tw-\tw·\n"; # Table header.
+				print OUTPUT "Atom\tElement\tq Neutral\t q Anion\tq Cation\tf+\tf-\tf°\tS+\tS-\tS°\tw+\tw-\tw°\n"; # Table header.
 				# Remove first, blank, element from the Mulliken arrays.
 					shift @MullikenAtomNum;
 					shift @MullikenElement;
@@ -371,9 +370,9 @@ foreach my $File (@FileList) {
 							print OUTPUT "$MullikenAtomNum[$Index]\t$MullikenElement[$Index]\t";
 							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $MullikenNeutral[$Index], $MullikenAnion[$Index], $MullikenCation[$Index]));
 						# Fukui Functions.
-							my $FukuiPlus = $MullikenAnion[$Index] - $MullikenNeutral[$Index];
-							my $FukuiMinus = $MullikenNeutral[$Index] - $MullikenCation[$Index];
-							my $FukuiRad = $MullikenAnion[$Index] - $MullikenCation[$Index];
+							my $FukuiPlus = $MullikenNeutral[$Index] - $MullikenAnion[$Index];
+							my $FukuiMinus = $MullikenCation[$Index] - $MullikenNeutral[$Index];
+							my $FukuiRad = $MullikenCation[$Index] - $MullikenAnion[$Index];
 							print OUTPUT (sprintf("%.6f\t%.6f\t%.6f\t", $FukuiPlus, $FukuiMinus, $FukuiRad));
 						# Softness Functions.
 							my $SoftnessPlus = $FukuiPlus * $Softness;
