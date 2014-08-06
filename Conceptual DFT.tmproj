@@ -24,13 +24,13 @@
 			<key>filename</key>
 			<string>Pyridine.out</string>
 			<key>lastUsed</key>
-			<date>2014-08-02T13:19:51Z</date>
+			<date>2014-08-06T20:57:26Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>cDFTExtract.pl</string>
 			<key>lastUsed</key>
-			<date>2014-08-02T16:55:33Z</date>
+			<date>2014-08-06T20:57:26Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -42,14 +42,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>43</integer>
+				<integer>98</integer>
 				<key>line</key>
-				<integer>322</integer>
+				<integer>357</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>232</integer>
 		</dict>
 		<key>pdb2cDFT.pl</key>
 		<dict>
@@ -72,8 +72,8 @@
 		<string>pdb2cDFT.pl</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
-	<true/>
+	<false/>
 	<key>windowFrame</key>
-	<string>{{551, 4}, {1366, 1054}}</string>
+	<string>{{879, 4}, {1026, 1054}}</string>
 </dict>
 </plist>
